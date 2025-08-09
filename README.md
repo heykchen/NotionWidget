@@ -1,3 +1,15 @@
+Functionality
+Being able to display a widget on your Android homescreen, an easy day to day view 
+Click name brings to app, the tags, and status can be clicked.
+You can change what the widget is displaying inside the app
+easily add asks to day by clicking the plus 
+Easy navigation between days
+
+Only display status, name, tag?
+
+
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
