@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import { WidgetPreview } from 'react-native-android-widget';
 
-import HelloWidget from './widget';
+import  TaskWidget from './widget';
 
 function HelloWidgetPreviewScreen() {
   return (
     <View style={styles.container}>
       <WidgetPreview
-        renderWidget={() => <HelloWidget />}
+        renderWidget={() => <TaskWidget />}
         width={320}
         height={200}
       />
@@ -22,6 +22,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
 export default function Index() {
   return (
     <View
