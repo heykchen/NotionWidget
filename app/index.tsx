@@ -33,7 +33,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text style={{fontFamily: "HelloHeadlineW00Regular"}}>Biscuits!</Text>
+      <Text style={{fontFamily: "HelloHeadlineW00Regular"}}>!</Text>
       <HelloWidgetPreviewScreen />
     </View>
   );
