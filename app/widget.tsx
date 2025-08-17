@@ -55,7 +55,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
         width: 'match_parent',
         backgroundColor: '#505050',
         flexDirection: 'column',
-        paddingHorizontal: 16,
+        paddingHorizontal: 15,
         paddingTop: 16,
         borderRadius: 16,
       }}
