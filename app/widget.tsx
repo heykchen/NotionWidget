@@ -24,7 +24,7 @@ function Stringtocolor(color: string) {
 
 const TestTasks: Task[] = [{
   id: '1',
-  title: 'Task1',
+  title: 'Task11',
   color: 'red',
   status: '🔥'
 }, {
@@ -35,6 +35,11 @@ const TestTasks: Task[] = [{
 }, {
   id: '3',
   title: 'Task 3',
+  color: 'blue',
+  status: '🫐'
+}, {
+  id: '4',
+  title: 'Task 4',
   color: 'blue',
   status: '🫐'
 }]
@@ -53,13 +58,14 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
       style={{
         height: 'match_parent',
         width: 'match_parent',
-        backgroundColor: '#505050',
         flexDirection: 'column',
+        backgroundColor: '#333333',
         paddingHorizontal: 15,
         paddingTop: 16,
         borderRadius: 16,
       }}
     >
+
       <FlexWidget
         style={{
           flexDirection: 'row',
@@ -67,17 +73,14 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
           alignItems: 'center',
           width: 'match_parent',
           marginBottom: 16,
-        }}
-        clickAction="FORWARD"
-        clickActionData={{
-            CurrentDate: Datenow
           }}
       >
         <TextWidget
           text="<"
-          clickAction="BACKWARD"
+          clickAction="DATECHANGE"
           clickActionData={{
-            CurrentDate: Datenow
+            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
+            Difference: -1
           }}
           style={{
             fontSize: 16,
@@ -98,9 +101,10 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
         />
         <TextWidget
           text=">"
-          clickAction="FORWARD"
+          clickAction="DATECHANGE"
           clickActionData={{
-            CurrentDate: Datenow
+            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
+            Difference: 1
           }}
           style={{
             fontSize: 16,
@@ -155,7 +159,8 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
                 }}
                 clickAction="STATUSSWITCH"
                 clickActionData={{
-                  TaskID: Task.id}}>
+                  TaskID: Task.id
+                }}>
                   
               <TextWidget
                 text={`${Task.status}`}
@@ -200,7 +205,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             CurrentDate: Datenow
           }}
         >
-          <TextWidget text="+" style={{ fontSize: 50, color: '#fff' }} />
+          <TextWidget text="+++" style={{ fontSize: 50, color: '#fff' }} />
         </FlexWidget>
       </ListWidget>
     </FlexWidget>

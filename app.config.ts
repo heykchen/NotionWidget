@@ -5,7 +5,7 @@ const widgetConfig: WithAndroidWidgetsParams = {
 
   widgets: [
     {
-      name: 'TaskWidget', // This name will be the **name** with which we will reference our widget.
+      name: 'TaskW', // This name will be the **name** with which we will reference our widget.
       label: 'Task Widget', // Label shown in the widget picker
       minWidth: '320dp',
       minHeight: '120dp',
