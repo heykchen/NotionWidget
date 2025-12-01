@@ -1,7 +1,6 @@
 import React from 'react';
 import { FlexWidget, ListWidget, TextWidget } from 'react-native-android-widget';
 
-
 interface Task {
   id: string;
   title: string;
@@ -9,18 +8,7 @@ interface Task {
   status: string;
 }
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-function Stringtocolor(color: string) {
-  switch (color) {
-    case 'red':
-      return '#ff0000';
-    case 'green':
-      return '#00ff00';
-    case 'blue':
-      return '#0000ff';
-    default:
-      return '#cccccc'; // fallback color
-  }
-}
+const COLOR_MAP: Record<string, string> = { red: '#e46666ff', green: '#60d460ff', blue: '#4c4ce7ff' };
 
 const TestTasks: Task[] = [{
   id: '1',
@@ -60,100 +48,105 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
         width: 'match_parent',
         flexDirection: 'column',
         backgroundColor: '#333333',
-        paddingHorizontal: 15,
-        paddingTop: 16,
         borderRadius: 16,
       }}
     >
-
-      <FlexWidget
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: 'match_parent',
-          marginBottom: 16,
-          }}
-      >
-        <TextWidget
-          text="<"
-          clickAction="DATECHANGE"
-          clickActionData={{
-            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
-            Difference: -1
-          }}
-          style={{
-            fontSize: 16,
-            fontWeight: '500',
-            color: '#fff',
-            backgroundColor: '#707070',
-            padding: 8,
-            borderRadius: 12,
-          }}
-        />
-        <TextWidget
-          text={`${Datenow.getDate() + " " + days[(Datenow?.getDay() ?? 0)]}`}
-          style={{
-            fontSize: 16,
-            fontWeight: '500',
-            color: '#fff',
-          }}
-        />
-        <TextWidget
-          text=">"
-          clickAction="DATECHANGE"
-          clickActionData={{
-            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
-            Difference: 1
-          }}
-          style={{
-            fontSize: 16,
-            fontWeight: '500',
-            color: '#fff',
-            backgroundColor: '#707070',
-            padding: 8,
-            borderRadius: 12,
-          }}
-        />
-      </FlexWidget>
       <ListWidget
         style={{
           height: 'match_parent',
           width: 'match_parent',
-          backgroundColor: '#66756dff',
-        }}>
-
-        
-
-        {Tasks.map((Task: Task, i) => (
-        <FlexWidget ///TASK LIST
+          margin: 8,
+        }}
+      >
+        <FlexWidget
           style={{
-            width: 'match_parent',
-            alignItems: 'center',
             flexDirection: 'row',
-          }}
-          key={i}
-          clickAction="OPEN_URI"
-          clickActionData={{
-            uri: `androidwidgetexample://list/list-demo/${Task.id}`,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: 'match_parent',
+            padding: 8,
+            // marginBottom: 16,
           }}
         >
-          <FlexWidget
+          <TextWidget
+            text=" < "
+            clickAction="DATECHANGE"
+            clickActionData={{
+              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
+              Difference: -1
+            }}
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#fff',
+              backgroundColor: '#707070',
+              padding: 8,
+              borderRadius: 12,
+            }}
+          />
+          <TextWidget
+            text={`${Datenow.getDate() + " " + days[(Datenow?.getDay() ?? 0)]}`}
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#fff',
+            }}
+          />
+          <TextWidget
+            text=" > "
+            clickAction="DATECHANGE"
+            clickActionData={{
+              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
+              Difference: 1
+            }}
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#fff',
+              backgroundColor: '#707070',
+              padding: 8,
+              borderRadius: 12,
+            }}
+          />
+        </FlexWidget>
+        {/* <ListWidget
+        style={{
+          height: 'match_parent',
+          width: 'match_parent',
+          backgroundColor: '#66756dff',
+        }}> */}
+
+
+
+        {Tasks.map((Task: Task, i) => (
+          <FlexWidget ///TASK LIST
             style={{
               width: 'match_parent',
-              backgroundColor: '#4d4d4d',
               alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'flex-start',
-              paddingVertical: 4,
-              paddingHorizontal: 4,
-              marginVertical: 2,
-              borderRadius: 100,
+            }}
+            key={i}
+            clickAction="OPEN_URI"
+            clickActionData={{
+              uri: `https://www.notion.so/${Task.title.replace(/\s+/g, '-')}-${Task.id.replace(/-/g, '')}`,
             }}
           >
-            <FlexWidget  ///STATUS DOT
-            style={{
-                  backgroundColor: `${Stringtocolor(Task.color)}`,
+            <FlexWidget
+              style={{
+                width: 'match_parent',
+                backgroundColor: '#4d4d4d',
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                paddingVertical: 4,
+                paddingHorizontal: 4,
+                marginVertical: 2,
+                borderRadius: 100,
+              }}
+            >
+              <FlexWidget  ///STATUS DOT
+                style={{
+                  backgroundColor: (COLOR_MAP as any)[Task.color] ?? '#cccccc',
                   borderRadius: 100,
                   padding: 4,
                 }}
@@ -161,36 +154,29 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
                 clickActionData={{
                   TaskID: Task.id
                 }}>
-                  
-              <TextWidget
-                text={`${Task.status}`}
+
+                <TextWidget
+                  text={`${Task.status}`}
+                  style={{
+                    fontSize: 15,
+                  }}
+                  truncate="END"
+                  maxLines={1}
+                />
+              </FlexWidget>
+              <TextWidget ///TITLE
+                text={`${Task.title}`}
                 style={{
-                  fontSize: 15,
+                  fontSize: 16,
+                  color: '#ffffff',
+                  fontWeight: '500',
                 }}
                 truncate="END"
                 maxLines={1}
               />
             </FlexWidget>
-            <TextWidget ///TITLE
-              text={`${Task.title}`}
-              style={{
-                fontSize: 16,
-                color: '#ffffff',
-                fontWeight: '500',
-              }}
-              truncate="END"
-              maxLines={1}
-            />
-            <TextWidget ///TIME
-              text={`${Task.color}`}
-              style={{
-                fontSize: 12,
-                color: '#ffffff',
-              }}
-            />
           </FlexWidget>
-        </FlexWidget>
-      ))}
+        ))}
         <FlexWidget ///ADD NEW TASK TO DATE
           style={{
             width: 'match_parent',
@@ -202,7 +188,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
           }}
           clickAction="NEW"
           clickActionData={{
-            CurrentDate: Datenow
+            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()]
           }}
         >
           <TextWidget text="+++" style={{ fontSize: 50, color: '#fff' }} />
