@@ -21,7 +21,7 @@ const widgetConfig: WithAndroidWidgetsParams = {
       // The task handler will be called with widgetAction = 'UPDATE_WIDGET'.
       // Default is 0 (no automatic updates)
       // Minimum is 1800000 (30 minutes == 30 * 60 * 1000).
-      updatePeriodMillis: 3600000,
+      updatePeriodMillis: 43200000,
     },
   ],
 };

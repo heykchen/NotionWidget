@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { WidgetPreview } from 'react-native-android-widget';
-
+import { Link } from 'expo-router';
 import  TaskWidget from './widget';
 
 function HelloWidgetPreviewScreen() {
@@ -33,7 +33,9 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text style={{fontFamily: "HelloHeadlineW00Regular"}}>Biscuits!</Text>
+      <Link href = './modal'>  
+        <Text style={{fontFamily: "HelloHeadlineW00Regular"}}>Biscuits!</Text>
+      </Link>
       <HelloWidgetPreviewScreen />
     </View>
   );
