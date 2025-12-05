@@ -45,8 +45,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       console.log('Widget clicked, action:', props.clickAction, props.clickActionData);
       if (props.clickAction === 'DATECHANGE') {
         const currentDateRaw = props.clickActionData?.CurrentDate as number[];
-        const diff = Number(props.clickActionData?.Difference) || 0;
-        const date = currentDateRaw ? new Date(currentDateRaw[0], currentDateRaw[1], currentDateRaw[2] + diff) : new Date();
+        const date = currentDateRaw ? new Date(currentDateRaw[0], currentDateRaw[1], currentDateRaw[2]) : new Date();
         const pages = await getPages(date);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />); 
         

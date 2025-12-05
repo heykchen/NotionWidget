@@ -1,12 +1,33 @@
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Linking } from "react-native";
 const { Client } = require("@notionhq/client")
-export const NAPI = {
-  NAPIKEY: process.env.EXPO_PUBLIC_NOTION_API_KEY,
-  NAPIDBID: process.env.EXPO_PUBLIC_NOTION_DATABASE_KEY,
-}
 
+let _ctx: { notion: any; NDATA: any } | null = null;
+
+const getNotionContext = async () => {
+  if (_ctx) {
+    return _ctx;
+  }
+  try {
+    const jsonString = await AsyncStorage.getItem('NDATA');
+    if (!jsonString) {
+      console.error("No NDATA found in storage.");
+      return null;
+    }
+    const { NotionKey, ...NDATA } = JSON.parse(jsonString || '{}');
+
+    // Initialize the Notion Client with the user's key
+    const notion = new Client({ auth: NotionKey });
+    _ctx = { notion, NDATA };
+    // Return the ready-to-use client AND the user's name
+    return _ctx;
+
+  } catch (error) {
+    console.error("Error initializing Notion client:", error);
+    return null;
+  }
+};
 
 // const storeData = async (key: string, value: any) => {
 //   try {
@@ -27,19 +48,11 @@ export const NAPI = {
 // };
 
 
-if (!NAPI.NAPIKEY || !NAPI.NAPIDBID) {
-  throw new Error("Environment variables NOTION_API_KEY and NOTION_API_DATABASE_ID must be set.");
-}
-const notion = new Client({
-  auth: NAPI.NAPIKEY,
-})
-
 //dont fetch the date bro
-async function getPropIDs() {
+async function getStatus() {
+  const { notion, NDATA } = await getNotionContext() || {};
   try {
-    const response = await notion.databases.retrieve({ database_id: NAPI.NAPIDBID });
-    console.log(byId(response.properties).status.status.options);
-    return byId(response.properties);
+    const response = await notion.databases.retrieve({ database_id: NDATA.NotionId });
 
   } catch (error) {
     console.error("Error fetching database properties:", error);
@@ -47,36 +60,33 @@ async function getPropIDs() {
   }
 }
 
-function byId(properties: Record<string, any>) {
-  return Object.values(properties).reduce((obj, prop) => {
-    const { type, ...rest } = prop
-    return { ...obj, [type]: rest }
-  }, {});
-}
+// function byId(properties: Record<string, any>) {
+//   return Object.values(properties).reduce((obj, prop) => {
+//     const { type, ...rest } = prop
+//     return { ...obj, [type]: rest }
+//   }, {});
+// }
 
 async function getPages(date: Date = new Date()): Promise<any[]> {
-  const props = await getPropIDs();
-  const dateId = props.date?.id;
-  const statusId = props.status?.id;
-  const titleId = props.title?.id;
-  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const ctx = await getNotionContext();
+  const { notion, NDATA } = ctx || {};
+  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // I can literally just get the number[] straight from the widget and use that to create the date
   const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-
 
   try {
     const pages = await notion.databases.query({
-      database_id: NAPI.NAPIDBID,
-      filter_properties: [statusId, titleId],
+      database_id: NDATA.NotionId,
+      filter_properties: [NDATA.Status, NDATA.Title],
       filter: {
         and: [
           {
-            property: dateId,
+            property: NDATA.Date,
             date: {
               on_or_after: startOfDay.toISOString(),
-            }
+            } //check what they want from us, isostring?
           },
           {
-            property: dateId,
+            property: NDATA.Date,
             date: {
               before: endOfDay.toISOString(),
             }
@@ -86,8 +96,8 @@ async function getPages(date: Date = new Date()): Promise<any[]> {
       },
     });
     console.log("Only pages:", pages.results);
-    console.log("Pages:", pages.results.map(fromNotionobject));
-    return pages.results.map(fromNotionobject);
+    console.log("Pages:", pages.results.map((page: any) => fromNotionobject(page, NDATA)));
+    return pages.results.map((page: any) => fromNotionobject(page, NDATA));
   } catch (error) {
     console.error("Error fetching database:", error);
     throw error;
@@ -95,11 +105,13 @@ async function getPages(date: Date = new Date()): Promise<any[]> {
 }
 
 async function createTask(date: Date) {
+  const ctx = await getNotionContext();
+  const { notion, NDATA } = ctx || {};
   try {
     const response = await notion.pages.create({
-      parent: { database_id: NAPI.NAPIDBID },
+      parent: { database_id: NDATA.NotionId },
       properties: {
-        'Date': {
+        [NDATA.Date]: {
           'date': {start: date.toISOString()},
         }
       }
@@ -112,17 +124,16 @@ async function createTask(date: Date) {
     }
   }
 
-  function fromNotionobject(notionpage: any) {
-    const propbyid = byId(notionpage.properties);
-    return {
+  function fromNotionobject(notionpage: any, NDATA: any) {
+    return { 
       id: notionpage.id,
-      title: propbyid.title?.title[0]?.plain_text || "",
-      status: propbyid.status?.status?.name || "",
-      color: propbyid.status?.status?.color || "",
+      title: notionpage.properties[NDATA.Title]?.title[0]?.plain_text || "",
+      status: notionpage.properties[NDATA.Status]?.status?.name || "",
+      color: notionpage.properties[NDATA.Status]?.status?.color || "",
     };
   }
   getPages()
-  getPropIDs()
+
 
   export { getPages, createTask };
 

@@ -72,8 +72,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" < "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
-              Difference: -1
+              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() - 1],
             }}
             style={{
               fontSize: 16,
@@ -96,8 +95,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" > "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()],
-              Difference: 1
+              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() + 1],
             }}
             style={{
               fontSize: 16,
