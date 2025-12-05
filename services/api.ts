@@ -58,7 +58,7 @@ async function getStatus() {
     console.error("Error fetching database properties:", error);
     throw error;
   }
-}
+};
 
 // function byId(properties: Record<string, any>) {
 //   return Object.values(properties).reduce((obj, prop) => {
