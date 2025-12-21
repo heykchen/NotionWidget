@@ -43,23 +43,20 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
     case 'WIDGET_CLICK':
       console.log('Widget clicked, action:', props.clickAction, props.clickActionData);
+      const currentDateRaw = props.clickActionData?.CurrentDate as string;
+      const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
+
       if (props.clickAction === 'DATECHANGE') {
-        const currentDateRaw = props.clickActionData?.CurrentDate as string;
-        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
         const pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 
       } else if (props.clickAction === 'NEW') {
-        const currentDateRaw = props.clickActionData?.CurrentDate as string;
-        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
         await createTask(currentDateRaw);
         const pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 
       } else if (props.clickAction === 'STATUSSWITCH') {
-        const currentDateRaw = props.clickActionData?.CurrentDate as string;
-        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
-        await switchStatus(props.clickActionData?.TaskID as string);
+        await switchStatus(props.clickActionData?.TaskID as string, props.clickActionData?.Status as string);
         const pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 

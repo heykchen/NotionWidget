@@ -151,7 +151,8 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
                 clickAction="STATUSSWITCH"
                 clickActionData={{
                   CurrentDate: Datenow.toISOString().slice(0, 10),
-                  TaskID: Task.id
+                  TaskID: Task.id,
+                  Status: Task.status,
                 }}>
 
                 <TextWidget

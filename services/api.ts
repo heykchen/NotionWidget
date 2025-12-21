@@ -7,6 +7,7 @@ let _ctx: { notion: any; NDATA: any } | null = null;
 
 const getNotionContext = async () => {
   if (_ctx) {
+    console.log("👍short");
     return _ctx;
   }
   try {
@@ -20,6 +21,7 @@ const getNotionContext = async () => {
     // Initialize the Notion Client with the user's key
     const notion = new Client({ auth: NotionKey });
     _ctx = { notion, NDATA };
+    console.log("🔥🔥looong");
     // Return the ready-to-use client AND the user's name
     return _ctx;
 
@@ -49,29 +51,27 @@ const getNotionContext = async () => {
 
 
 //dont fetch the date bro
-async function handleCheck() {
-  const { notion, NDATA } = await getNotionContext() || {};
+async function handleCheck(NDATA: any) {
+  const notion = new Client({ auth: NDATA.NotionKey });
   try {
     const response = await notion.databases.retrieve({ database_id: NDATA.NotionId });
-    await AsyncStorage.setItem("Status", response.properties[NDATA.Status].status.options.map((o: Record<string, any>) => o.name))
-    console.log("Database properties: ", response.properties[NDATA.Status].status.options);
-
+    return response.properties[NDATA.Status].status.options.map((o: Record<string, any>) => o.name);
   } catch (error) {
     console.error("Error fetching database properties:", error);
     throw error;
   }
 };
 
-async function switchStatus(TaskID: string) {
+async function switchStatus(TaskID: string, Status: string) {
   const { notion, NDATA } = await getNotionContext() || {};
-  const status: string[] = await AsyncStorage.getItem("Status") ;
+  const Options = NDATA.Options;
   try {
     await notion.pages.update({
     page_id: TaskID,
     properties: {
       [NDATA.Status]: {
         status: {
-          name: "✅"
+          name: Options[((Options.indexOf(Status) + 1) % Options.length)]
         }
       },
     },
@@ -91,8 +91,7 @@ async function switchStatus(TaskID: string) {
 // }
 
 async function getPages(date: string = new Date().toISOString().slice(0, 10)): Promise<any[]> {
-  const ctx = await getNotionContext();
-  const { notion, NDATA } = ctx || {};
+  const { notion, NDATA } = await getNotionContext() || {};
 
   try {
     const pages = await notion.databases.query({
@@ -103,11 +102,8 @@ async function getPages(date: string = new Date().toISOString().slice(0, 10)): P
         date: {
           equals: date,
         } //check what they want from us, isostring?
-
       },
     });
-    console.log("Only pages:", pages.results);
-    console.log("Pages:", pages.results.map((page: Record<string, any>) => fromNotionobject(page, NDATA)));
     return pages.results.map((page: Record<string, any>) => fromNotionobject(page, NDATA));
   } catch (error) {
     console.error("Error fetching database:", error);
@@ -116,8 +112,7 @@ async function getPages(date: string = new Date().toISOString().slice(0, 10)): P
 }
 
 async function createTask(date: string) {
-  const ctx = await getNotionContext();
-  const { notion, NDATA } = ctx || {};
+  const { notion, NDATA } = await getNotionContext() || {};
   try {
     const response = await notion.pages.create({
       parent: { database_id: NDATA.NotionId },
@@ -131,7 +126,7 @@ async function createTask(date: string) {
     await Linking.openURL(response.url);
   }
   catch (error) {
-    console.error("Error fetching database:", error);
+    console.error("Error creating task:", error);
     throw error;
   }
 }

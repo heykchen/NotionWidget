@@ -39,18 +39,19 @@ export default function Modal() {
     
     try {
       // 2. Package
-      const NDATA = {
+      let NDATA = {
         NotionKey: NotionKey,
         NotionId: NotionId,
         Status: Status,
         Date: Date,
         Title: Title,
+        Options: [] as string[],
       };
+      NDATA.Options = await handleCheck(NDATA);
 
       // 3. Save (The Writer)
       // We use 'my_app_credentials' as the specific filename
       await AsyncStorage.setItem('NDATA', JSON.stringify(NDATA));
-      handleCheck();
 
       Alert.alert('Saved', 'Your credentials are secure.');
     } catch (e) {
