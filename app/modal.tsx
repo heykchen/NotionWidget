@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { getStatus } from '@/services/api';
 
 export default function Modal() {
 
@@ -36,6 +36,7 @@ export default function Modal() {
   const saveData = async () => {
     // 1. Validate
     console.log('Saving data:', {NotionKey, NotionId, Status, Date, Title });
+    
     try {
       // 2. Package
       const NDATA = {
@@ -49,6 +50,7 @@ export default function Modal() {
       // 3. Save (The Writer)
       // We use 'my_app_credentials' as the specific filename
       await AsyncStorage.setItem('NDATA', JSON.stringify(NDATA));
+      getStatus();
 
       Alert.alert('Saved', 'Your credentials are secure.');
     } catch (e) {

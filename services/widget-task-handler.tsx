@@ -1,7 +1,7 @@
 import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import  TaskWidget  from '../app/widget';
-import { createTask, getPages } from '../services/api';
+import TaskWidget from '../app/widget';
+import { createTask, getPages, switchStatus } from '../services/api';
 
 let pages: any[] = [];
 console.log('Widghet Task Handler Loaded');
@@ -13,7 +13,7 @@ const nameToWidget = {
 
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
-  
+
   console.log('WTH invoked:', props.widgetAction, 'clickAction=', props.clickAction);
   console.log('widgetInfo:', JSON.stringify(props.widgetInfo));
   const widgetInfo = props.widgetInfo;
@@ -44,20 +44,27 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_CLICK':
       console.log('Widget clicked, action:', props.clickAction, props.clickActionData);
       if (props.clickAction === 'DATECHANGE') {
-        const currentDateRaw = props.clickActionData?.CurrentDate as number[];
-        const date = currentDateRaw ? new Date(currentDateRaw[0], currentDateRaw[1], currentDateRaw[2]) : new Date();
-        const pages = await getPages(date);
-        props.renderWidget(<Widget Tasks={pages} Datenow={date} />); 
-        
-      } else if (props.clickAction === 'NEW') {
-        const currentDateRaw = props.clickActionData?.CurrentDate as number[];
-        const date = currentDateRaw ? new Date(currentDateRaw[0], currentDateRaw[1], currentDateRaw[2]) : new Date();
-        await createTask(date);
-        const pages = await getPages(date);
+        const currentDateRaw = props.clickActionData?.CurrentDate as string;
+        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
+        const pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
-      
+
+      } else if (props.clickAction === 'NEW') {
+        const currentDateRaw = props.clickActionData?.CurrentDate as string;
+        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
+        await createTask(currentDateRaw);
+        const pages = await getPages(currentDateRaw);
+        props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
+
+      } else if (props.clickAction === 'STATUSSWITCH') {
+        const currentDateRaw = props.clickActionData?.CurrentDate as string;
+        const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
+        await switchStatus(props.clickActionData?.TaskID as string);
+        const pages = await getPages(currentDateRaw);
+        props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
+
       } else {
-        props.renderWidget(<Widget/>);
+        props.renderWidget(<Widget />);
       }
       break;
 

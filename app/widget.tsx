@@ -72,7 +72,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" < "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() - 1],
+              CurrentDate: new Date(Datenow.getTime() - 864e5).toISOString().slice(0, 10),
             }}
             style={{
               fontSize: 16,
@@ -95,7 +95,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" > "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() + 1],
+              CurrentDate: new Date(Datenow.getTime() + 864e5).toISOString().slice(0, 10),
             }}
             style={{
               fontSize: 16,
@@ -150,6 +150,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
                 }}
                 clickAction="STATUSSWITCH"
                 clickActionData={{
+                  CurrentDate: Datenow.toISOString().slice(0, 10),
                   TaskID: Task.id
                 }}>
 
@@ -186,7 +187,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
           }}
           clickAction="NEW"
           clickActionData={{
-            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()]
+            CurrentDate: Datenow.toISOString().slice(0, 10)
           }}
         >
           <TextWidget text="+++" style={{ fontSize: 50, color: '#fff' }} />

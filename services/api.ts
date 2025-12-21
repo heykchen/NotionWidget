@@ -1,6 +1,6 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Linking } from "react-native";
+import { Alert, Linking } from "react-native";
 const { Client } = require("@notionhq/client")
 
 let _ctx: { notion: any; NDATA: any } | null = null;
@@ -49,13 +49,36 @@ const getNotionContext = async () => {
 
 
 //dont fetch the date bro
-async function getStatus() {
+async function handleCheck() {
   const { notion, NDATA } = await getNotionContext() || {};
   try {
     const response = await notion.databases.retrieve({ database_id: NDATA.NotionId });
+    
+    console.log("Database properties: ", response.properties[NDATA.Status].status.options);
 
   } catch (error) {
     console.error("Error fetching database properties:", error);
+    Alert.alert("Error", error as string || "An error occurred while fetching database properties.");
+    throw error;
+  }
+};
+
+async function switchStatus(TaskID: string) {
+  const { notion, NDATA } = await getNotionContext() || {};
+  try {
+    const response = await notion.pages.update({
+    page_id: TaskID,
+    properties: {
+      [NDATA.Status]: {
+        status: {
+          name: "✅"
+        }
+      },
+    },
+  });
+  }
+  catch (error) {
+    console.error("Error switching status:", error);
     throw error;
   }
 };
@@ -67,31 +90,19 @@ async function getStatus() {
 //   }, {});
 // }
 
-async function getPages(date: Date = new Date()): Promise<any[]> {
+async function getPages(date: string = new Date().toISOString().slice(0, 10)): Promise<any[]> {
   const ctx = await getNotionContext();
   const { notion, NDATA } = ctx || {};
-  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // I can literally just get the number[] straight from the widget and use that to create the date
-  const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
   try {
     const pages = await notion.databases.query({
       database_id: NDATA.NotionId,
       filter_properties: [NDATA.Status, NDATA.Title],
       filter: {
-        and: [
-          {
-            property: NDATA.Date,
-            date: {
-              on_or_after: startOfDay.toISOString(),
-            } //check what they want from us, isostring?
-          },
-          {
-            property: NDATA.Date,
-            date: {
-              before: endOfDay.toISOString(),
-            }
-          }
-        ],
+        property: NDATA.Date,
+        date: {
+          equals: date,
+        } //check what they want from us, isostring?
 
       },
     });
@@ -104,7 +115,7 @@ async function getPages(date: Date = new Date()): Promise<any[]> {
   }
 }
 
-async function createTask(date: Date) {
+async function createTask(date: string) {
   const ctx = await getNotionContext();
   const { notion, NDATA } = ctx || {};
   try {
@@ -112,30 +123,30 @@ async function createTask(date: Date) {
       parent: { database_id: NDATA.NotionId },
       properties: {
         [NDATA.Date]: {
-          'date': {start: date.toISOString()},
+          'date': { start: date },
         }
       }
 
     });
-      await Linking.openURL(response.url);}
-    catch (error) {
-      console.error("Error fetching database:", error);
-      throw error;
-    }
+    await Linking.openURL(response.url);
   }
-
-  function fromNotionobject(notionpage: any, NDATA: any) {
-    return { 
-      id: notionpage.id,
-      title: notionpage.properties[NDATA.Title]?.title[0]?.plain_text || "",
-      status: notionpage.properties[NDATA.Status]?.status?.name || "",
-      color: notionpage.properties[NDATA.Status]?.status?.color || "",
-    };
+  catch (error) {
+    console.error("Error fetching database:", error);
+    throw error;
   }
-  getPages()
+}
+
+function fromNotionobject(notionpage: any, NDATA: any) {
+  return {
+    id: notionpage.id,
+    title: notionpage.properties[NDATA.Title]?.title[0]?.plain_text || "",
+    status: notionpage.properties[NDATA.Status]?.status?.name || "",
+    color: notionpage.properties[NDATA.Status]?.status?.color || "",
+  };
+}
 
 
-  export { getPages, createTask };
+export { getPages, createTask, handleCheck, switchStatus };
 
 //  LOG  Start of day: 2025-11-06T23:00:00.000Z
 //  LOG  End of day: 2025-11-07T23:00:00.000Z
