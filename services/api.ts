@@ -1,6 +1,6 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert, Linking } from "react-native";
+import { Linking } from "react-native";
 const { Client } = require("@notionhq/client")
 
 let _ctx: { notion: any; NDATA: any } | null = null;
@@ -53,20 +53,20 @@ async function handleCheck() {
   const { notion, NDATA } = await getNotionContext() || {};
   try {
     const response = await notion.databases.retrieve({ database_id: NDATA.NotionId });
-    
+    await AsyncStorage.setItem("Status", response.properties[NDATA.Status].status.options.map((o: Record<string, any>) => o.name))
     console.log("Database properties: ", response.properties[NDATA.Status].status.options);
 
   } catch (error) {
     console.error("Error fetching database properties:", error);
-    Alert.alert("Error", error as string || "An error occurred while fetching database properties.");
     throw error;
   }
 };
 
 async function switchStatus(TaskID: string) {
   const { notion, NDATA } = await getNotionContext() || {};
+  const status: string[] = await AsyncStorage.getItem("Status") ;
   try {
-    const response = await notion.pages.update({
+    await notion.pages.update({
     page_id: TaskID,
     properties: {
       [NDATA.Status]: {
@@ -107,8 +107,8 @@ async function getPages(date: string = new Date().toISOString().slice(0, 10)): P
       },
     });
     console.log("Only pages:", pages.results);
-    console.log("Pages:", pages.results.map((page: any) => fromNotionobject(page, NDATA)));
-    return pages.results.map((page: any) => fromNotionobject(page, NDATA));
+    console.log("Pages:", pages.results.map((page: Record<string, any>) => fromNotionobject(page, NDATA)));
+    return pages.results.map((page: Record<string, any>) => fromNotionobject(page, NDATA));
   } catch (error) {
     console.error("Error fetching database:", error);
     throw error;

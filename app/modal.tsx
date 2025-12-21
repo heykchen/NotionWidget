@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getStatus } from '@/services/api';
+import { handleCheck } from '@/services/api';
 
 export default function Modal() {
 
@@ -50,7 +50,7 @@ export default function Modal() {
       // 3. Save (The Writer)
       // We use 'my_app_credentials' as the specific filename
       await AsyncStorage.setItem('NDATA', JSON.stringify(NDATA));
-      getStatus();
+      handleCheck();
 
       Alert.alert('Saved', 'Your credentials are secure.');
     } catch (e) {
