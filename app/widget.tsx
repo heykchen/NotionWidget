@@ -8,7 +8,7 @@ interface Task {
   status: string;
 }
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const COLOR_MAP: Record<string, string> = { red: '#e46666ff', green: '#60d460ff', blue: '#4c4ce7ff' };
+const COLOR_MAP: Record<string, string> = { red: '#e46666ff', green: '#60d460ff', blue: '#4c4ce7ff', brown: '#b5651dff', yellow: '#e7e74cff', purple: '#b84cb8ff', gray: '#808080ff', orange: '#e78c4cff', pink: '#e78cb4ff'   };
 
 const TestTasks: Task[] = [{
   id: '1',
@@ -40,7 +40,7 @@ interface TaskWidgetProps {
 }
 
 ///FINAL WIDGET
-export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: TaskWidgetProps) {
+export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date()}: TaskWidgetProps) {
   return (
     <FlexWidget
       style={{

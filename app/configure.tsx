@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, Alert, KeyboardAvoidingView, TouchableHighlight } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleCheck } from '@/services/api';
 
-export default function Modal() {
+export default function Configure() {
 
   const [NotionKey, setNotionKey] = useState(process.env.EXPO_PUBLIC_NOTION_API_KEY || '');
   const [NotionId, setNotionId] = useState(process.env.EXPO_PUBLIC_NOTION_DATABASE_KEY || '');
@@ -61,36 +61,41 @@ export default function Modal() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Notion API Key</Text>
+    <KeyboardAvoidingView behavior="height" style={styles.container}>
+      <TouchableHighlight onPress={() => Alert.alert('Help', 'NOTION API Key from your integration, Notion database ID from your databasse link, Status/Date/Title name from property name')} style={[styles.button, {margin:30, alignSelf: 'flex-end'}]}>
+        <Text style={[styles.text, {color: '#fff'}]}>?</Text>
+      </TouchableHighlight>
+
+
+      <Text style={styles.text}>Notion API Key</Text>
       <TextInput
         onChangeText={setNotionKey}
         placeholder="Notion API Key"
         value={NotionKey}
         style={styles.input}
       />
-      <Text>NotionId</Text>
+      <Text style={styles.text}>NotionId</Text>
       <TextInput
         onChangeText={setNotionId}
         placeholder="Notion Database ID"
         value={NotionId}
         style={styles.input}
       />
-      <Text>Status</Text>
+      <Text style={styles.text}>Status</Text>
       <TextInput
         onChangeText={setStatus}
         placeholder="Status name"
         value={Status}
         style={styles.input}
       />
-      <Text>Date</Text>
+      <Text style={styles.text}>Date</Text>
       <TextInput
         onChangeText={setDate}
         placeholder="Date name"
         value={Date}
         style={styles.input}
       />
-      <Text>Title</Text>
+      <Text style={styles.text}>Title</Text>
       <TextInput
         onChangeText={setTitle}
         placeholder="Title name"
@@ -99,10 +104,10 @@ export default function Modal() {
       />
 
 
-      <TouchableOpacity onPress={saveData} style={styles.button}>
-        <Text>Save</Text>
-      </TouchableOpacity>
-    </View>
+      <TouchableHighlight onPress={saveData} style={styles.button}>
+        <Text style={[styles.text, {color: '#fff'}]}>Save</Text>
+      </TouchableHighlight>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -115,8 +120,8 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#DDDDDD',
-    borderRadius: 5,
+    backgroundColor: '#4a3a99',
+    borderRadius: 20  
   },
   input: {
     height: 40,
@@ -125,5 +130,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
     width: '80%',
+    borderRadius:10
+    
   },
+  text: {
+    fontFamily: 'HelloHeadlineW00Regular',
+  }
 });
