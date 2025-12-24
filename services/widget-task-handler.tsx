@@ -4,7 +4,6 @@ import TaskWidget from '../app/widget';
 import { createTask, getPages, switchStatus } from '../services/api';
 
 let pages: any[] = [];
-console.log('Widghet Task Handler Loaded');
 
 const nameToWidget = {
   // Hello will be the **name** with which we will reference our widget.
@@ -14,10 +13,7 @@ const nameToWidget = {
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
-  console.log('WTH invoked:', props.widgetAction, 'clickAction=', props.clickAction);
-  console.log('widgetInfo:', JSON.stringify(props.widgetInfo));
   const widgetInfo = props.widgetInfo;
-  console.log('widget name:', widgetInfo.widgetName);
   const Widget =
     nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget] as any;
 
@@ -47,21 +43,20 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
       const date = currentDateRaw ? new Date(currentDateRaw) : new Date();
 
       if (props.clickAction === 'DATECHANGE') {
-        const pages = await getPages(currentDateRaw);
+        pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 
       } else if (props.clickAction === 'NEW') {
         await createTask(currentDateRaw);
-        const pages = await getPages(currentDateRaw);
-        props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 
       } else if (props.clickAction === 'STATUSSWITCH') {
         await switchStatus(props.clickActionData?.TaskID as string, props.clickActionData?.Status as string);
-        const pages = await getPages(currentDateRaw);
+        pages = await getPages(currentDateRaw);
         props.renderWidget(<Widget Tasks={pages} Datenow={date} />);
 
       } else {
-        props.renderWidget(<Widget />);
+        pages = await getPages();
+        props.renderWidget(<Widget Tasks={pages} />);
       }
       break;
 

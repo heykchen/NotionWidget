@@ -85,6 +85,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date()}: T
           />
           <TextWidget
             text={`${Datenow.getDate() + " " + days[(Datenow?.getDay() ?? 0)]}`}
+            clickAction="REFETCH"
             style={{
               fontSize: 16,
               fontWeight: '500',

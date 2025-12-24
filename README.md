@@ -1,62 +1,48 @@
-Functionality
-Being able to display a widget on your Android homescreen, an easy day to day view 
-Click name brings to app, the tags, and status can be clicked.
-You can change what the widget is displaying inside the app
-easily add asks to day by clicking the plus 
-Easy navigation between days
+# Notion widget for Android  
+## Video Demo:
+https://youtube.com/
+## Description:
+A simple app that contains a widget for you to display custom Notion databases straight on your homescreen!
+* Add items
+* Open items
+* Switch status
+* Change dates
 
-Only display status, name, tag?
+![Widget preview](assets/images/taskw.png)
 
+<details>
+<summary>
 
+## Code breakdown
+</summary>
 
+### Framework:
+For this project I used the React Native framework to create the app. I had watched a lot of reviews on frameworks, and ultimatly found React Native to be the most well documented and best long term skill to learn. However, I definitely was not ready for the journey ahead of me, as I have never touched a single line of HTML or Javascript before. When I say CS50 was my first experience with coding, it really was. 
+This definitely was not possible without the [React Native Android Widget library](https://saleksovski.github.io/react-native-android-widget/) from Stefan Aleksoski. Online tutorials already brought me really far, but there had always been videos where they forced a certain library or framework onto you. Me, being a 
+#### `index.tsx`
+### Widget:
+#### `widget-task-handler.tsx`
+#### `widget.tsx`
+This file lays out the structure and overall shape of the widget UI. The Android Widget library made this super simple by exporting custom components that work similar to tsx (and HTML in that regard). I first had to define the types as to avoid typescript yelling at me, I had to create a custom type/interface called task for all the properties I would like to display or use in the final widget:
 
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+``` interface Task {
+  id: string;
+  title: string;
+  color: string;
+  status: string;
+}
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+#### `app.config.ts`
+This file contains all the widget parameters which will then get converted into native code for Android to understand. It contains the name, size, description, preview. Basically, the actual part that makes it able to add onto the homescreen. As I had used Expo to create this project, I had to define it as a plugin in order for it to have native functionality. The cool thing with Expo is that whenever I made a mistake or change a small feature, it can get updated automatically (hot reloading), without having to rebuild the entire project. 
 
-## Learn more
+### Notion:
+#### `api.ts`
+This file is basically the backbone of the entire project, and the most tiresome. I had to watch multiple videos and then had to find a way to tie it all together. I had 
+#### `configure.tsx`
 
-To learn more about developing your project with Expo, look at the following resources:
+</details>
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+ ## Final thoughts:
+ The reason I chose this idea to create was because I wanted to create something I might use myself in the future. A productivity tool 
+ I had just started my final year of highschool, which meant which was why this project was on hold for so long, but the voice in the back of my mind nagging me to finish what I had started never left. I knew I had already fought through the hardest part of the course (damn you, pointers!) 
