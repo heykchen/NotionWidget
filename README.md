@@ -48,7 +48,7 @@ This file contains all the widget parameters which will then get converted into 
 ### Notion:
 #### `api.ts`
 This file is basically the backbone of the entire project, and the most tiresome. I had to watch multiple videos and then had to find a way to tie it all together. 
-To use the Notion API client, I had to create a notion integration and link it to the database I would like to display. This integration has an API key which grants the user access to all kinds of operations. But I made the rookie mistake of leaking this to the public on github, and I had a lot of trouble with working in git to fix it. I eventually refreshed the integration key and learned about .env files, but this event thought me a bit about basic security.
+To use the Notion API client, I had to create a notion integration and link it to the database I would like to display. This integration has an API key which grants the user access to all kinds of operations. But I made the rookie mistake of leaking this to the public on github, and I had a lot of trouble with working in git to fix it. I eventually refreshed the integration key and learned about .env files, but this event thought me a bit about basic security. 
 
 Notion API , NotionData object
 #### `configure.tsx`
