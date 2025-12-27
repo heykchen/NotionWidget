@@ -1,5 +1,5 @@
 # Notion widget for Android 
-![Notion widget icon](assets\images\icon.png)
+![Notion widget icon](assets/images/icon.png)
 ## Video Demo:
 https://youtube.com/
 ## Description:
