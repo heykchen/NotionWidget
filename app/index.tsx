@@ -38,6 +38,3 @@ export default function Index() {
     </View>
   );
 }
-try {require('../services/api')} catch (e) {
-  console.error("Error loading API service:", e);
-}

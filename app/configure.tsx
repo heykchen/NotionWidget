@@ -55,7 +55,7 @@ export default function Configure() {
 
       Alert.alert('Saved', 'Your credentials are secure.');
     } catch (e) {
-      Alert.alert('Error', 'Could not save data.');
+      Alert.alert('Error', e instanceof Error ? e.message : 'An error occurred while saving.');
       console.error(e);
     }
   };
