@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, Alert, KeyboardAvoidingView, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, TextInput, Alert, KeyboardAvoidingView, TouchableHighlight, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { handleCheck } from '@/services/api';
@@ -66,6 +66,7 @@ export default function Configure() {
         <Text style={[styles.text, {color: '#fff'}]}>?</Text>
       </TouchableHighlight>
 
+      <Image source={require('../assets/images/catpeak.png')} />
 
       <Text style={styles.text}>Notion API Key</Text>
       <TextInput
