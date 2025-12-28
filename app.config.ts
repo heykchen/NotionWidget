@@ -15,7 +15,7 @@ const widgetConfig: WithAndroidWidgetsParams = {
       targetCellWidth: 5,
       targetCellHeight: 2,
       description: 'This is my first widget', // Description shown in the widget picker
-      previewImage: './assets/images/Taskwiddget.png', // Path to widget preview image
+      previewImage: './assets/images/taskw.png', // Path to widget preview image
 
       // How often, in milliseconds, that this AppWidget wants to be updated.
       // The task handler will be called with widgetAction = 'UPDATE_WIDGET'.

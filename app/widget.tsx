@@ -8,7 +8,7 @@ interface Task {
   status: string;
 }
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const COLOR_MAP: Record<string, string> = { red: '#e46666ff', green: '#60d460ff', blue: '#4c4ce7ff' };
+const COLOR_MAP: Record<string, string> = { red: '#e46666ff', green: '#60d460ff', blue: '#4c4ce7ff', brown: '#b5651dff', yellow: '#e7e74cff', purple: '#b84cb8ff', gray: '#808080ff', orange: '#e78c4cff', pink: '#e78cb4ff'   };
 
 const TestTasks: Task[] = [{
   id: '1',
@@ -40,7 +40,7 @@ interface TaskWidgetProps {
 }
 
 ///FINAL WIDGET
-export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: TaskWidgetProps) {
+export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date()}: TaskWidgetProps) {
   return (
     <FlexWidget
       style={{
@@ -72,7 +72,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" < "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() - 1],
+              CurrentDate: new Date(Datenow.getTime() - 864e5).toISOString().slice(0, 10),
             }}
             style={{
               fontSize: 16,
@@ -85,6 +85,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
           />
           <TextWidget
             text={`${Datenow.getDate() + " " + days[(Datenow?.getDay() ?? 0)]}`}
+            clickAction="REFETCH"
             style={{
               fontSize: 16,
               fontWeight: '500',
@@ -95,7 +96,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
             text=" > "
             clickAction="DATECHANGE"
             clickActionData={{
-              CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate() + 1],
+              CurrentDate: new Date(Datenow.getTime() + 864e5).toISOString().slice(0, 10),
             }}
             style={{
               fontSize: 16,
@@ -150,7 +151,9 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
                 }}
                 clickAction="STATUSSWITCH"
                 clickActionData={{
-                  TaskID: Task.id
+                  CurrentDate: Datenow.toISOString().slice(0, 10),
+                  TaskID: Task.id,
+                  Status: Task.status,
                 }}>
 
                 <TextWidget
@@ -186,7 +189,7 @@ export default function TaskWidget({ Tasks = TestTasks, Datenow = new Date() }: 
           }}
           clickAction="NEW"
           clickActionData={{
-            CurrentDate: [Datenow.getFullYear(), Datenow.getMonth(), Datenow.getDate()]
+            CurrentDate: Datenow.toISOString().slice(0, 10)
           }}
         >
           <TextWidget text="+++" style={{ fontSize: 50, color: '#fff' }} />
