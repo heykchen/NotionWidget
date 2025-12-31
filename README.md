@@ -1,7 +1,7 @@
 # Notion widget for Android 
 ![Notion widget icon](assets/images/splash-icon.png)
 ## Video Demo:
-https://youtube.com/
+https://youtu.be/Ef1haO2pgZw
 ## Description:
 A simple app that contains a widget for you to display custom Notion databases straight on your homescreen!
 * Add items
